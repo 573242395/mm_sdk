@@ -513,7 +513,7 @@ Array.prototype.sortBy = function (method, key) {
 				for (var k in objA) {
 					var value = objB[k];
 					if (value != undefined) {
-						var type = _typeof(objA[k]);
+						var type = typeof(objA[k]);
 						if (type == "Number") {
 							objA[k] = value;
 						} else if (value == "true") {
@@ -536,7 +536,7 @@ Array.prototype.sortBy = function (method, key) {
 				for (var k in obj) {
 					var val = obj[k];
 					if (val) {
-						var name = typeof val === 'undefined' ? 'undefined' : _typeof(val);
+						var name = typeof val === 'undefined' ? 'undefined' : typeof(val);
 						switch (name) {
 							case "string":
 								obj[k] = "";
@@ -633,7 +633,7 @@ Array.prototype.sortBy = function (method, key) {
 	$.copy = function (obj, bl) {
 		var text = "";
 		if (bl) {
-			if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) == "object") {
+			if ((typeof obj === 'undefined' ? 'undefined' : typeof(obj)) == "object") {
 				for (var k in obj) {
 					var name = k;
 					var value = obj[k];
@@ -644,7 +644,7 @@ Array.prototype.sortBy = function (method, key) {
 				text = obj;
 			}
 		} else {
-			if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) == "object") {
+			if ((typeof obj === 'undefined' ? 'undefined' : typeof(obj)) == "object") {
 				text = JSON.stringify(obj);
 			} else {
 				text = obj;
@@ -799,7 +799,7 @@ Array.prototype.sortBy = function (method, key) {
 			});
 			return json;
 		},
-		postJson: function postJson(url, param, fun, headers) {
+		post: function post(url, param, fun, headers) {
 			var json;
 			$.ajax({
 				type: 'POST',
@@ -834,7 +834,7 @@ Array.prototype.sortBy = function (method, key) {
 			});
 			return json;
 		},
-		post: function post(url, param, fun, headers) {
+		postForm: function postForm(url, param, fun, headers) {
 			var json;
 			$.ajax({
 				type: 'POST',
@@ -987,7 +987,7 @@ Array.prototype.sortBy = function (method, key) {
 	$.lang.toggle = function (name) {
 		$.lang.now = name;
 	};
-})(_jquery2.default);
+})(jquery);
 
 /* MD5加密类 */
 (function ($) {
