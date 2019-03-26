@@ -84,8 +84,35 @@ function descNum(a, b) {
 	return b - a;
 }
 
+
 /* == 数字拓展函数 == */
-Number.prototype.toTime = function () {
+/// 去尾法
+/// len: 保留长度
+/// 返回: 数值
+Number.prototype.toFloor = function(len) {
+	var n = Math.pow(10, len);
+	return Math.floor(this * n) / n;
+};
+
+/// 进一法
+/// len: 保留长度
+/// 返回: 数值
+Number.prototype.toCeil = function(len) {
+	var n = Math.pow(10, len);
+	return Math.ceil(this * n) / n;
+};
+
+/// 四舍五入法
+/// len: 保留长度
+/// 返回: 数值
+Number.prototype.toRound = function(len) {
+	var n = Math.pow(10, len);
+	return Math.round(this * n) / n;
+};
+
+/// 转为时间类型
+/// 返回: 时间对象
+Number.prototype.toTime = function() {
 	return new Date(this * 1000);
 };
 
@@ -93,7 +120,7 @@ Number.prototype.toTime = function () {
 /// 时间格式化
 /// fmt: 指定格式
 /// 返回: 时间字符串
-Date.prototype.format = function (fmt) {
+Date.prototype.format = function(fmt) {
 	var o = {
 		"M+": this.getMonth() + 1,
 		"d+": this.getDate(),
@@ -119,7 +146,7 @@ Date.prototype.format = function (fmt) {
 /// 删除首字符
 /// str: 要删除的字符, 默认删除空字符
 /// 返回: 删除后字符串
-String.prototype.startTrim = function (str) {
+String.prototype.startTrim = function(str) {
 	if (!str) {
 		str = "\\s";
 	} else {
@@ -132,7 +159,7 @@ String.prototype.startTrim = function (str) {
 /// 删除尾字符
 /// str: 要删除的字符, 默认删除空字符
 /// 返回: 删除后字符串
-String.prototype.endTrim = function (str) {
+String.prototype.endTrim = function(str) {
 	if (!str) {
 		str = "\\s";
 	} else {
@@ -145,7 +172,7 @@ String.prototype.endTrim = function (str) {
 /// 删除首尾字符
 /// str: 要删除的字符, 默认删除空字符
 /// 返回: 删除后字符串
-String.prototype.trim = function (str) {
+String.prototype.trim = function(str) {
 	if (!str) {
 		str = "\\s";
 	} else {
@@ -157,39 +184,39 @@ String.prototype.trim = function (str) {
 
 /// 获取当前时间戳
 /// 返回: 返回时间戳(数字型)
-Date.prototype.stamp = function () {
+Date.prototype.stamp = function() {
 	var timestamp = Date.parse(this);
 	return timestamp / 1000;
 };
 
 /// 获取本月
 /// 返回: 月份
-Date.prototype.month = function () {
+Date.prototype.month = function() {
 	return this.format("yyyy-MM");
 };
 
 /// 获取当前日期
 /// 返回: 当前日期
-Date.prototype.date = function () {
+Date.prototype.date = function() {
 	return this.format("yyyy-MM-dd");
 };
 
 /// 获取当前日期时间
 /// 返回: 日期喝时间
-Date.prototype.dateTime = function () {
+Date.prototype.dateTime = function() {
 	return this.format("yyyy-MM-dd hh:mm:ss");
 };
 
 /// 获取当前时间
 /// 返回: 时间
-Date.prototype.time = function () {
+Date.prototype.time = function() {
 	return this.format("hh:mm:ss");
 };
 
 /// 计算时间差——时间间隔
 /// endTime：结束时间
 /// time_unit：时间单位（day天、hours小时、minutes分钟）
-Date.prototype.interval = function (endTime, time_unit) {
+Date.prototype.interval = function(endTime, time_unit) {
 	var startTime = this; // startTime：开始时间
 	var stime = Date.parse(new Date(startTime));
 	var etime = Date.parse(new Date(endTime));
@@ -211,13 +238,13 @@ Date.prototype.interval = function (endTime, time_unit) {
 };
 
 /// 时间添加天数
-Date.prototype.addDays = function (days) {
+Date.prototype.addDays = function(days) {
 	this.setDate(this.getDate() + days);
 	return this;
 };
 
 /// 时间添加秒数
-Date.prototype.addSeconds = function (seconds) {
+Date.prototype.addSeconds = function(seconds) {
 	this.setSeconds(this.getSeconds() + seconds);
 	return this;
 };
@@ -225,7 +252,7 @@ Date.prototype.addSeconds = function (seconds) {
 /* == 字符串拓展函数 == */
 /// 验证开头字符串
 /// 返回：验证成功返回true，失败返回false
-String.prototype.startWith = function (startStr) {
+String.prototype.startWith = function(startStr) {
 	var d = this.length - startStr.length;
 	if (d >= 0 && this.indexOf(startStr) == 0) {
 		return true;
@@ -235,7 +262,7 @@ String.prototype.startWith = function (startStr) {
 
 /// 验证结束字符串
 /// 返回：验证成功返回true，失败返回false
-String.prototype.endWith = function (endStr) {
+String.prototype.endWith = function(endStr) {
 	var d = this.length - endStr.length;
 	if (d >= 0 && this.lastIndexOf(endStr) == d) {
 		return true;
@@ -246,14 +273,14 @@ String.prototype.endWith = function (endStr) {
 /// 是否含字符串
 /// str: 判断的字符
 /// 返回：验证成功返回true，失败返回false
-String.prototype.has = function (str) {
+String.prototype.has = function(str) {
 	return this.indexOf(str) != -1;
 };
 
 /// 取文本左边
 /// str: 索引的字符
 /// bl: 当索引字符不存在时是否保留左边
-String.prototype.left = function (str, bl) {
+String.prototype.left = function(str, bl) {
 	var i = this.indexOf(str);
 	if (i == -1) {
 		if (bl) {
@@ -269,7 +296,7 @@ String.prototype.left = function (str, bl) {
 /// 取文本右边
 /// str: 索引的字符
 /// bl: 当索引字符不存在时是否保留右边
-String.prototype.right = function (str, bl) {
+String.prototype.right = function(str, bl) {
 	var i = this.indexOf(str);
 	if (i == -1) {
 		if (bl) {
@@ -285,7 +312,7 @@ String.prototype.right = function (str, bl) {
 /// 取文本右边
 /// str: 索引的字符
 /// bl: 当索引字符不存在时是否保留右边
-String.prototype.betwen = function (str_l, str_r, bl) {
+String.prototype.betwen = function(str_l, str_r, bl) {
 	var str = this.right(str_l, bl);
 	str = str.left(str_r, bl);
 	return str;
@@ -296,7 +323,7 @@ String.prototype.betwen = function (str_l, str_r, bl) {
 /// oldStr：替换的字符串
 /// newStr：替换为字符串
 /// 返回：替换后的字符串
-String.prototype.replaceAll = function (oldStr, newStr) {
+String.prototype.replaceAll = function(oldStr, newStr) {
 	var txt = this;
 	if (!newStr) {
 		newStr = '';
@@ -312,8 +339,8 @@ String.prototype.replaceAll = function (oldStr, newStr) {
 /// oldStr：替换的字符串
 /// newStr：替换为字符串
 /// 返回：替换后的字符串
-String.prototype.toTime = function () {
-	var str = this.replace('T', ' ').replace('Z', '').replaceAll('.', '-').replaceAll('/', '-');
+String.prototype.toTime = function() {
+	var str = this.replace('T', ' ').replace('Z', '').replaceAll('.', '/').replaceAll('-', '/');
 	return new Date(str);
 };
 
@@ -322,7 +349,7 @@ String.prototype.toTime = function () {
 /// key：比较键名
 /// value：比较值
 /// 返回：返回对象或属性值
-Array.prototype.get = function (key, value) {
+Array.prototype.get = function(key, value) {
 	var obj;
 	var arr = this;
 	for (var i = 0; i < arr.length; i++) {
@@ -340,7 +367,7 @@ Array.prototype.get = function (key, value) {
 /// value：比较值
 /// name：获取指定属性值,为空则返回对象
 /// 返回：返回对象或属性值
-Array.prototype.getVal = function (key, value, name) {
+Array.prototype.getVal = function(key, value, name) {
 	var val;
 	var obj = this.get(key, value);
 	if (obj != null) {
@@ -354,7 +381,7 @@ Array.prototype.getVal = function (key, value, name) {
 /// key：附加属性
 /// value：附加属性值
 /// 返回: 添加后的数组
-Array.prototype.eachPush = function (arr, key, value) {
+Array.prototype.eachPush = function(arr, key, value) {
 	if (arr) {
 		if (key) {
 			for (var i = 0; i < arr.length; i++) {
@@ -376,7 +403,7 @@ Array.prototype.eachPush = function (arr, key, value) {
 /// splitStr：分隔符
 /// key：对象属性
 /// 返回:字符串
-Array.prototype.toStr = function (splitStr, key) {
+Array.prototype.toStr = function(splitStr, key) {
 	var arr = this;
 	var str = "";
 	if (key) {
@@ -397,7 +424,7 @@ Array.prototype.toStr = function (splitStr, key) {
 
 /// 清空数组
 /// 返回: 清空的数组
-Array.prototype.clear = function () {
+Array.prototype.clear = function() {
 	this.splice(0, this.length);
 	return this;
 };
@@ -408,7 +435,7 @@ Array.prototype.clear = function () {
 /// value：搜索匹配值
 /// all: 是否删除所有
 /// 返回: 删除后的数组
-Array.prototype.del = function (key, value, all) {
+Array.prototype.del = function(key, value, all) {
 	for (var i = this.length - 1; i > -1; i--) {
 		var o = this[i];
 		if (o[key] == value) {
@@ -427,7 +454,7 @@ Array.prototype.del = function (key, value, all) {
 /// value：搜索匹配值
 /// all: 是否删除所有
 /// 返回: 删除后的数组
-Array.prototype.has = function (key, value) {
+Array.prototype.has = function(key, value) {
 	var bl = false;
 	for (var i = 0; i < this.length; i++) {
 		var o = this[i];
@@ -444,7 +471,7 @@ Array.prototype.has = function (key, value) {
 /// value：搜索匹配值
 /// all: 是否删除所有
 /// 返回: 删除后的数组
-Array.prototype.set = function (query, obj) {
+Array.prototype.set = function(query, obj) {
 	for (var i = 0; i < this.length; i++) {
 		var o = this[i];
 		for (var k in query) {
@@ -459,7 +486,7 @@ Array.prototype.set = function (query, obj) {
 /// 对象列表排序
 /// key：用来判断排序的对象属性
 /// method：排序方式, asc升序, desc降序
-Array.prototype.sortBy = function (method, key) {
+Array.prototype.sortBy = function(method, key) {
 	if (key) {
 		var isCN = typeof this[0][key] == "string";
 		var fun = newSort(key);
@@ -486,7 +513,7 @@ Array.prototype.sortBy = function (method, key) {
 	return this;
 };
 
-(function ($) {
+(function($) {
 	$.plugins = {
 		clipboard: {}
 	};
@@ -630,7 +657,7 @@ Array.prototype.sortBy = function (method, key) {
 	/// 拷贝数据
 	/// obj：拷贝的对象
 	/// bl：是否格式化。格式化后的数据会以 "键：值（换行）"形式显示
-	$.copy = function (obj, bl) {
+	$.copy = function(obj, bl) {
 		var text = "";
 		if (bl) {
 			if ((typeof obj === 'undefined' ? 'undefined' : typeof(obj)) == "object") {
@@ -661,7 +688,7 @@ Array.prototype.sortBy = function (method, key) {
 		/// fun: 回调函数,当计时为0时执行
 		down: function down(obj, longTime, fun) {
 			obj.longTime = longTime;
-			var timer = setInterval(function () {
+			var timer = setInterval(function() {
 				obj.longTime--;
 				if (obj.longTime == 0) {
 					clearInterval(timer);
@@ -712,12 +739,13 @@ Array.prototype.sortBy = function (method, key) {
 		},
 		/// 倒计时
 		/// obj: 时间对象
-		/// 
+		/// fmt: 显示格式
+		/// fun: 结束时回调函数
 		countdown: function countdown(obj, fmt, fun) {
 			if (!obj.seconds) {
 				obj.seconds = 86400000;
 			}
-			var timer = setInterval(function () {
+			var timer = setInterval(function() {
 				obj.seconds -= 1000;
 				if (obj.seconds == 0) {
 					clearInterval(timer);
@@ -737,20 +765,14 @@ Array.prototype.sortBy = function (method, key) {
 	$.http = {
 		get: function get(url, fun, headers) {
 			var json;
-			$.ajax({
+			var hp = {
 				type: 'GET',
 				url: url,
 				async: fun !== null,
 				xhrFields: {
 					withCredentials: true
 				},
-				beforeSend: function beforeSend(xhr) {
-					if (headers) {
-						for (var k in headers) {
-							xhr.setRequestHeader(k, headers[k]);
-						}
-					}
-				},
+				crossDomain: true,
 				success: function success(data, status) {
 					if (fun) {
 						fun(data, status);
@@ -764,25 +786,23 @@ Array.prototype.sortBy = function (method, key) {
 				complete: function complete(XHR, TS) {
 					XHR = null;
 				}
-			});
+			};
+			if (headers) {
+				hp.headers = headers;
+			}
+			$.ajax(hp);
 			return json;
 		},
 		getText: function getText(url, fun, headers) {
 			var text;
-			$.ajax({
+			var hp = {
 				type: 'GET',
 				url: url,
 				async: fun !== null,
 				xhrFields: {
 					withCredentials: true
 				},
-				beforeSend: function beforeSend(xhr) {
-					if (headers) {
-						for (var k in headers) {
-							xhr.setRequestHeader(k, headers[k]);
-						}
-					}
-				},
+				crossDomain: true,
 				success: function success(data, status) {
 					if (fun) {
 						fun(data, status);
@@ -796,28 +816,26 @@ Array.prototype.sortBy = function (method, key) {
 				complete: function complete(XHR, TS) {
 					XHR = null;
 				}
-			});
+			};
+			if (headers) {
+				hp.headers = headers;
+			}
+			$.ajax(hp);
 			return json;
 		},
 		post: function post(url, param, fun, headers) {
 			var json;
-			$.ajax({
+			var hp = {
 				type: 'POST',
 				url: url,
 				async: fun !== null,
 				xhrFields: {
 					withCredentials: true
 				},
+				crossDomain: true,
 				data: param,
-				contentType: "application/json;charset=utf-8;",
+				contentType: "application/json; charset=utf-8;",
 				dataType: "json",
-				beforeSend: function beforeSend(xhr) {
-					if (headers) {
-						for (var k in headers) {
-							xhr.setRequestHeader(k, headers[k]);
-						}
-					}
-				},
 				success: function success(data, status) {
 					if (fun) {
 						fun(data, status);
@@ -831,27 +849,25 @@ Array.prototype.sortBy = function (method, key) {
 				complete: function complete(XHR, TS) {
 					XHR = null;
 				}
-			});
+			};
+			if (headers) {
+				hp.headers = headers;
+			}
+			$.ajax(hp);
 			return json;
 		},
 		postForm: function postForm(url, param, fun, headers) {
 			var json;
-			$.ajax({
+			var hp = {
 				type: 'POST',
 				url: url,
 				async: fun !== null,
 				xhrFields: {
 					withCredentials: true
 				},
+				crossDomain: true,
 				data: param,
 				dataType: "json",
-				beforeSend: function beforeSend(xhr) {
-					if (headers) {
-						for (var k in headers) {
-							xhr.setRequestHeader(k, headers[k]);
-						}
-					}
-				},
 				success: function success(data, status) {
 					if (fun) {
 						fun(data, status);
@@ -865,7 +881,11 @@ Array.prototype.sortBy = function (method, key) {
 				complete: function complete(XHR, TS) {
 					XHR = null;
 				}
-			});
+			};
+			if (headers) {
+				hp.headers = headers;
+			}
+			$.ajax(hp);
 			return json;
 		}
 	};
@@ -878,12 +898,12 @@ Array.prototype.sortBy = function (method, key) {
 			if (url) {
 				_domain = url;
 			}
-			return ";path=/;domain=" + _domain;
+			return ";path=/";
 		},
 		/// 设置缓存
 		/// key：缓存对象
 		/// value：缓存值
-		/// minutes: 缓存时长， 单位：分钟
+		/// minutes: 缓存时长，单位：分钟
 		set: function set(name, value, minutes) {
 			var time = new Date();
 			if (minutes) {
@@ -910,6 +930,7 @@ Array.prototype.sortBy = function (method, key) {
 			}
 			return value;
 		},
+
 		/// 删除cookie
 		del: function del(name) {
 			this.set(name, "", -1);
@@ -920,7 +941,7 @@ Array.prototype.sortBy = function (method, key) {
 	/// key：缓存对象
 	/// value：缓存值
 	/// minutes: 缓存时长，单位：分钟
-	$.cookie = function (key, value, minutes) {
+	$.cookie = function(key, value, minutes) {
 		if (value != undefined) {
 			if (!minutes) {
 				if (value == null) {
@@ -974,23 +995,24 @@ Array.prototype.sortBy = function (method, key) {
 		}
 
 		/* 切换语言设置 */
-	};$.lang = {
+	};
+	$.lang = {
 		now: "",
 		dict: {}
 	};
-	$.lang.get = function (key) {
+	$.lang.get = function(key) {
 		return $.lang.dict[key];
 	};
-	$.lang.set = function (key, value) {
+	$.lang.set = function(key, value) {
 		$.lang.dict[key] = value;
 	};
-	$.lang.toggle = function (name) {
+	$.lang.toggle = function(name) {
 		$.lang.now = name;
 	};
 })(jquery);
 
 /* MD5加密类 */
-(function ($) {
+(function($) {
 	/* md5加密（开始） */
 	var hexcase = 0;
 	/* hex output format. 0 - lowercase; 1 - uppercase  */
@@ -1000,14 +1022,14 @@ Array.prototype.sortBy = function (method, key) {
 	/* bits per input character. 8 - ASCII; 16 - Unicode  */
 
 	/*
-  * Perform a simple self-test to see if the VM is working
-  */
+	 * Perform a simple self-test to see if the VM is working
+	 */
 	function md5_vm_test() {
 		return hex_md5("abc") == "900150983cd24fb0d6963f7d28e17f72";
 	}
 	/*
-  * Calculate the MD5 of an array of little-endian words, and a bit length
-  */
+	 * Calculate the MD5 of an array of little-endian words, and a bit length
+	 */
 	function core_md5(x, len) {
 		/* append padding */
 		x[len >> 5] |= 0x80 << len % 32;
@@ -1093,8 +1115,8 @@ Array.prototype.sortBy = function (method, key) {
 		return Array(a, b, c, d);
 	}
 	/*
-  * These functions implement the four basic operations the algorithm uses.
-  */
+	 * These functions implement the four basic operations the algorithm uses.
+	 */
 	function md5_cmn(q, a, b, x, s, t) {
 		return safe_add(bit_rol(safe_add(safe_add(a, q), safe_add(x, t)), s), b);
 	}
@@ -1115,13 +1137,13 @@ Array.prototype.sortBy = function (method, key) {
 		return md5_cmn(c ^ (b | ~d), a, b, x, s, t);
 	}
 	/*
-  * Calculate the HMAC-MD5, of a key and some data
-  */
+	 * Calculate the HMAC-MD5, of a key and some data
+	 */
 	function core_hmac_md5(key, data) {
 		var bkey = str2binl(key);
 		if (bkey.length > 16) bkey = core_md5(bkey, key.length * chrsz);
 		var ipad = Array(16),
-		    opad = Array(16);
+			opad = Array(16);
 		for (var i = 0; i < 16; i++) {
 			ipad[i] = bkey[i] ^ 0x36363636;
 			opad[i] = bkey[i] ^ 0x5C5C5C5C;
@@ -1130,24 +1152,24 @@ Array.prototype.sortBy = function (method, key) {
 		return core_md5(opad.concat(hash), 512 + 128);
 	}
 	/*
-  * Add integers, wrapping at 2^32. This uses 16-bit operations internally
-  * to work around bugs in some JS interpreters.
-  */
+	 * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+	 * to work around bugs in some JS interpreters.
+	 */
 	function safe_add(x, y) {
 		var lsw = (x & 0xFFFF) + (y & 0xFFFF);
 		var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
 		return msw << 16 | lsw & 0xFFFF;
 	}
 	/*
-  * Bitwise rotate a 32-bit number to the left.
-  */
+	 * Bitwise rotate a 32-bit number to the left.
+	 */
 	function bit_rol(num, cnt) {
 		return num << cnt | num >>> 32 - cnt;
 	}
 	/*
-  * Convert a string to an array of little-endian words
-  * If chrsz is ASCII, characters >255 have their hi-byte silently ignored.
-  */
+	 * Convert a string to an array of little-endian words
+	 * If chrsz is ASCII, characters >255 have their hi-byte silently ignored.
+	 */
 	function str2binl(str) {
 		var bin = Array();
 		var mask = (1 << chrsz) - 1;
@@ -1157,8 +1179,8 @@ Array.prototype.sortBy = function (method, key) {
 		return bin;
 	}
 	/*
-  * Convert an array of little-endian words to a string
-  */
+	 * Convert an array of little-endian words to a string
+	 */
 	function binl2str(bin) {
 		var str = "";
 		var mask = (1 << chrsz) - 1;
@@ -1168,8 +1190,8 @@ Array.prototype.sortBy = function (method, key) {
 		return str;
 	}
 	/*
-  * Convert an array of little-endian words to a hex string.
-  */
+	 * Convert an array of little-endian words to a hex string.
+	 */
 	function binl2hex(binarray) {
 		var hex_tab = hexcase ? "0123456789ABCDEF" : "0123456789abcdef";
 		var str = "";
@@ -1179,15 +1201,17 @@ Array.prototype.sortBy = function (method, key) {
 		return str;
 	}
 	/*
-  * Convert an array of little-endian words to a base-64 string
-  */
+	 * Convert an array of little-endian words to a base-64 string
+	 */
 	function binl2b64(binarray) {
 		var tab = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 		var str = "";
 		for (var i = 0; i < binarray.length * 4; i += 3) {
-			var triplet = (binarray[i >> 2] >> 8 * (i % 4) & 0xFF) << 16 | (binarray[i + 1 >> 2] >> 8 * ((i + 1) % 4) & 0xFF) << 8 | binarray[i + 2 >> 2] >> 8 * ((i + 2) % 4) & 0xFF;
+			var triplet = (binarray[i >> 2] >> 8 * (i % 4) & 0xFF) << 16 | (binarray[i + 1 >> 2] >> 8 * ((i + 1) % 4) & 0xFF) <<
+				8 | binarray[i + 2 >> 2] >> 8 * ((i + 2) % 4) & 0xFF;
 			for (var j = 0; j < 4; j++) {
-				if (i * 8 + j * 6 > binarray.length * 32) str += b64pad;else str += tab.charAt(triplet >> 6 * (3 - j) & 0x3F);
+				if (i * 8 + j * 6 > binarray.length * 32) str += b64pad;
+				else str += tab.charAt(triplet >> 6 * (3 - j) & 0x3F);
 			}
 		}
 		return str;
