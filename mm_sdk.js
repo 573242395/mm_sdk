@@ -529,6 +529,16 @@ Array.prototype.sortBy = function(method, key) {
 	return this;
 };
 
+Array.prototype.toArr = function(key){
+	var arr = [];
+	var lt = this;
+	for (var i = 0; i < lt.length; i++) {
+		var o = lt[i];
+		arr.push(o[key]);
+	}
+	return arr;
+};
+
 (function($) {
 	$.plugins = {
 		clipboard: {}
