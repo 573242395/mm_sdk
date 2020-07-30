@@ -334,6 +334,8 @@ function delete_prop(obj, includeZero) {
 	return o;
 }
 
+
+
 /**
  * @namespace
  * @property {Object} pool 数据连接池, 用于存储有关数据库的操作类
@@ -972,6 +974,62 @@ if (typeof($) === "undefined") {
 
 /* == 数组原型函数 == */
 (function() {
+	/**
+	 * 列表转树形列表
+	 * @param {Array} list 列表
+	 * @param {String} id ID字段
+	 * @param {Number} value ID对应值
+	 * @param {String} father_id 上级ID字段
+	 * @param {String} sub 子类字段
+	 * @return {Array} 返回属性值
+	 */
+	function toTree(list, id, value = 0, father_id = 'father_id', sub = 'sub') {
+		var arr = [];
+		for (var i = 0; i < list.length; i++) {
+			var o = list[i];
+			if (o[father_id] === value) {
+				o[sub] = toTree(list, id, o[id]);
+				arr.push(o);
+			}
+		}
+		return arr;
+	}
+	
+	function toList(list, sub = 'sub', arr = []){
+		for(var i = 0; i < list.length; i++){
+			var o = list[i];
+			var lt = o[sub];
+			delete o[sub];
+			arr.push(o);
+			if(lt && lt.length > 0){
+				toList(lt, sub, arr);
+			}
+		}
+		return arr;
+	}
+	
+	/**
+	 * 列表转树形列表
+	 * @param {String} id ID字段
+	 * @param {Number} value ID对应值
+	 * @param {String} father_id 上级ID字段
+	 * @param {String} sub 子类字段
+	 * @return {Array} 返回数组
+	 */
+	Array.prototype.toTree = function(id, value = 0, father_id = 'father_id', sub = 'sub') {
+		return toTree(this, id, value, father_id, sub);
+	};
+	
+	/**
+	 * 列表转树形列表
+	 * @param {String} sub 子类字段
+	 * @param {Array} arr 结果数组
+	 * @return {Array} 返回数组
+	 */
+	Array.prototype.toList = function (sub = 'sub', arr = []){
+		return toList(this, sub, arr);
+	};
+	
 	/**
 	 * @description 拷贝对象
 	 * @param {Boolean} has 是否非空拷贝，如果含有数据才拷贝，不含数据不拷贝
@@ -2163,7 +2221,16 @@ if (typeof($) === "undefined") {
 		 * @param {Number} longTime 保存时长（单位:分钟）
 		 */
 		set: function(key, value, longTime) {
-			window.localStorage.setItem(key, value);
+			var expires = null;
+			if (longTime) {
+				var time = Date.now();
+				expires = time + longTime * 60000;
+			}
+			var data = {
+				value,
+				expires
+			};
+			window.localStorage.setItem(key, JSON.stringify(data));
 		},
 		/**
 		 * 获取值
@@ -2171,7 +2238,31 @@ if (typeof($) === "undefined") {
 		 * @return {Object} 值
 		 */
 		get: function(key) {
-			return window.localStorage.getItem(key);
+			var value;
+			var text = window.localStorage.getItem(key);
+			if (text && text.indexOf('{') === 0) {
+				try {
+					var data = JSON.parse(text);
+					if (data) {
+						if (data.expires) {
+							var time = new Date(data.expires);
+							if (time > Date.now()) {
+								value = data.value;
+							} else {
+								window.localStorage.removeItem(key);
+							}
+						} else {
+							value = data.value;
+						}
+					}
+				} catch (e) {
+					console.log(e);
+					value = text;
+				}
+			} else {
+				value = text;
+			}
+			return value;
 		},
 		/**
 		 * 删除值
@@ -2698,7 +2789,7 @@ if (typeof($) === "undefined") {
 		return ret;
 	};
 	$.get = get;
-	
+
 	/**
 	 * 遍历读写对象
 	 * @param {Object} obj
@@ -2706,8 +2797,7 @@ if (typeof($) === "undefined") {
 	 * @param {Object} value 值，如果不传为查询，传为修改
 	 */
 	function obj_for(obj, key, value) {
-		if(!key)
-		{
+		if (!key) {
 			return undefined;
 		}
 		var keys = key.split('.');
@@ -2717,12 +2807,11 @@ if (typeof($) === "undefined") {
 		}
 		var k = keys[0];
 		var o = obj[k];
-		if(len == 1 && value !== undefined){
+		if (len == 1 && value !== undefined) {
 			obj[k] = value;
 			o = value;
-		}
-		else if (typeof(o) == 'object') {
-			if(len > 1){
+		} else if (typeof(o) == 'object') {
+			if (len > 1) {
 				return obj_for(o, keys.splice(1, len).join('.'), value);
 			}
 		} else if (len > 1) {
@@ -2730,21 +2819,19 @@ if (typeof($) === "undefined") {
 		}
 		return o;
 	}
-	
+
 	$.obj = obj_for;
 })();
 
 /**
  * 跨站校验
  */
-function ifame_check(){
+function ifame_check() {
 	var domain = document.domain;
 	var _self = Object.assign({}, window.self.location);
 	try {
 		var host = window.top.location.host;
-	}
-	catch(e)
-	{
+	} catch (e) {
 		console.log('跨域嵌套ifame');
 		window.location.href = "/404.html";
 	}
